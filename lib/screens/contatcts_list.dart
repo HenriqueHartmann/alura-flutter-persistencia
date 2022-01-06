@@ -13,11 +13,10 @@ class ContactsList extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: const Text('Contacts')),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Contact>>(
           initialData: const [],
-          future: findAll(),
+          future: Future.delayed(const Duration(seconds: 1)).then((value) => findAll()),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
               final List<Contact> contacts = snapshot.data as List<Contact>;
               return ListView.builder(
                 itemBuilder: (context, index) {
@@ -27,9 +26,17 @@ class ContactsList extends StatelessWidget {
                 },
                 itemCount: contacts.length,
               );
-            }
 
-            return const CircularProgressIndicator();
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const <Widget>[
+                  CircularProgressIndicator(),
+                  Text('Loading')
+                ],
+              ),
+            );
       }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
