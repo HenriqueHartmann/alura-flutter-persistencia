@@ -17,26 +17,41 @@ class ContactsList extends StatelessWidget {
           initialData: const [],
           future: Future.delayed(const Duration(seconds: 1)).then((value) => findAll()),
           builder: (context, snapshot) {
-              final List<Contact> contacts = snapshot.data as List<Contact>;
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final Contact contact = contacts[index];
+            switch(snapshot.connectionState) {
 
-                  return _ContactItem(contact: contact);
-                },
-                itemCount: contacts.length,
-              );
+              case ConnectionState.none:
+                // TODO: Handle this case.
+                break;
+              case ConnectionState.waiting:
+                // TODO: Handle this case.
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const <Widget>[
+                      CircularProgressIndicator(),
+                      Text('Loading')
+                    ],
+                  ),
+                );
+                break;
+              case ConnectionState.active:
+                // TODO: Handle this case.
+                break;
+              case ConnectionState.done:
+                // TODO: Handle this case.
+                final List<Contact> contacts = snapshot.data as List<Contact>;
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final Contact contact = contacts[index];
 
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
-                  CircularProgressIndicator(),
-                  Text('Loading')
-                ],
-              ),
-            );
+                    return _ContactItem(contact: contact);
+                  },
+                  itemCount: contacts.length,
+                );
+                break;
+            }
+            return const Text('Unknown error,');
       }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -73,5 +88,4 @@ class _ContactItem extends StatelessWidget {
         )
     );
   }
-  
 }
